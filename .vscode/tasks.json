@@ -1,0 +1,38 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Black on Current File",
+            "type": "shell",
+            "command": "black",
+            "args": [
+                "${file}"
+            ],
+            "isBackground": false,
+            "problemMatcher": []
+        },
+        {
+            "label": "Start (Docker Compose Up)",
+            "type": "shell",
+            "command": "docker-compose up",
+            "isBackground": false,
+            "problemMatcher": []
+        },
+        {
+            "label": "Stop (Docker Compose Down)",
+            "type": "shell",
+            "command": "docker-compose down",
+            "isBackground": false,
+            "problemMatcher": []
+        },
+        {
+            "label": "Build (Docker Compose Build)",
+            "type": "shell",
+            "command": "docker-compose build",
+            "isBackground": false,
+            "problemMatcher": []
+        },
+    ]
+}

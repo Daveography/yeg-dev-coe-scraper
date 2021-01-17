@@ -1,0 +1,4 @@
+.venv
+.vscode
+selenium
+__pycache__

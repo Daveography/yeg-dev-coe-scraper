@@ -1,0 +1,17 @@
+version: "3"
+services:
+  projectdb:
+    container_name: projectdb
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: project
+      POSTGRES_PASSWORD: myprojectdb
+      POSTGRES_DB: projects
+
+  projectscraper:
+    container_name: projectscraper
+    build:
+      context: .
+      dockerfile: Dockerfile
