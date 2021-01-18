@@ -1,8 +1,7 @@
 import logging
-from typing import List
-from scraper.model.coe.planning.project_profile import ProjectProfileElement
-from scraper.model.scraper_driver import ScraperDriver
+
 import scraper.model.coe.planning.pages as pages
+from scraper.model.scraper_driver import ScraperDriver
 
 
 def main():
@@ -24,15 +23,20 @@ def main():
 
     driver = ScraperDriver()
     planning_page = pages.PlanningApplicationsPage(driver)
-    all_nbhds = planning_page.get_all_neighbourhood_urls()
+    all_wards = planning_page.get_all_wards()
 
-    planning_projects: List[ProjectProfileElement] = []
+    for ward in all_wards:
+        for neighbourhood in ward.neighbourhoods:
+            neighbourhood_page = pages.NeighbourhoodApplicationsPage(
+                driver, neighbourhood
+            )
 
-    for nbhd in all_nbhds:
-        nbhd_page = pages.NeighbourhoodApplicationsPage(driver, nbhd)
-        planning_projects.extend(nbhd_page.get_all_proposed_projects())
-
-    [logger.info(project.title) for project in planning_projects]
+            [
+                logger.info(
+                    f"{ward.title} - {neighbourhood.title} - {project.title}"
+                )
+                for project in neighbourhood_page.get_all_proposed_projects()
+            ]
 
 
 main()

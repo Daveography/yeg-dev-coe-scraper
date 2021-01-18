@@ -1,6 +1,9 @@
 import logging
-from scraper.model.coe.planning.project_profile import ProjectProfileElement
 from typing import List
+
+from scraper.model.coe.planning.neighbourhood import NeighbourhoodElement
+from scraper.model.coe.planning.project import ProjectElement
+from scraper.model.coe.planning.ward import WardElement
 from selenium.webdriver.remote.webdriver import WebDriver
 
 
@@ -19,30 +22,33 @@ class PlanningApplicationsPage(BasePage):
         self._logger.info("Loading Planning Applications page...")
         self._driver.get(self.url)
 
-    def get_all_neighbourhood_urls(self) -> List[str]:
-        return [
-            link.get_attribute("href")
-            for link in self._driver.find_elements_by_xpath(
-                "//div[@class='tiles__tile']/a"
-            )
-        ]
+        self.__ward_elements = self._driver.find_elements_by_xpath(
+            "//div[contains(concat(' ', normalize-space(@class), ' '), ' accordion__section ')]"
+        )
+
+    def get_all_wards(self) -> List[WardElement]:
+        return [WardElement(element) for element in self.__ward_elements]
 
 
 class NeighbourhoodApplicationsPage(BasePage):
-    def __init__(self, driver: WebDriver, url: str):
+    def __init__(self, driver: WebDriver, neighbourhood: NeighbourhoodElement):
         super().__init__(driver)
 
-        self.url = url
+        self.neighbourhood = neighbourhood
+        self.url = self.neighbourhood.url
 
-        self._logger.info("Loading Neighbourhood Applications page...")
+        self._logger.info(
+            f"Loading Applications page for {self.neighbourhood.title}..."
+        )
         self._driver.get(self.url)
 
-    def get_all_proposed_projects(self) -> List[ProjectProfileElement]:
+        self.__proposed_projects_elements = self._driver.find_elements_by_xpath(
+            "//h2[text()='Proposed']"
+            "/following-sibling::div[@class='accordion']"
+            "/div[contains(concat(' ', normalize-space(@class), ' '), 'accordion__section')]"
+        )
+
+    def get_all_proposed_projects(self) -> List[ProjectElement]:
         return [
-            ProjectProfileElement(element)
-            for element in self._driver.find_elements_by_xpath(
-                "//h2[text()='Proposed']"
-                "/following-sibling::div[@class='accordion']"
-                "/div[contains(@class,'accordion__section')]"
-            )
+            ProjectElement(element) for element in self.__proposed_projects_elements
         ]
