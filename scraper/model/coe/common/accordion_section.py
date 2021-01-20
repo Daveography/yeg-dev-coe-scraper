@@ -1,3 +1,4 @@
+from time import sleep
 from selenium.webdriver.remote.webelement import WebElement
 
 
@@ -15,6 +16,8 @@ class AccordionSectionElement:
         # Expand the accordian if not already expanded
         if "active" not in self._element.get_attribute("class"):
             self._header_element.click()
+            # Accordion needs a bit of time to expand
+            sleep(0.5)
 
         title_element: WebElement = self._header_element.find_element_by_tag_name("span")
 
