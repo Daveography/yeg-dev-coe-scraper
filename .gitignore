@@ -1,3 +1,4 @@
+.env
 .venv
 selenium
 __pycache__

@@ -1,0 +1,2 @@
+db_uri: postgresql://project:myprojectdb@localhost/projects
+create_tables: True
